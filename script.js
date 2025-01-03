@@ -53,10 +53,10 @@ class FilterOption extends HTMLElement {
         evaluateAttribute(contentNode, 'set-data-text', (k, v, e) => {
             e.innerText = this.getAttribute(v)
         })
-        evaluateAttribute(contentNode, 'data-set-data-title', (k, v, e) => {
+        evaluateAttribute(contentNode, 'set-data-title', (k, v, e) => {
             e.title = this.getAttribute(v)
         })
-        evaluateAttribute(contentNode, 'data-set-data-aria-label', (k, v, e) => {
+        evaluateAttribute(contentNode, 'set-data-aria-label', (k, v, e) => {
             e.ariaLabel = this.getAttribute(v)
         })
 
