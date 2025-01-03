@@ -1,0 +1,18 @@
+{
+  "name": "@saithodev/dom-filters",
+  "version": "1.0.0",
+  "description": "Make DOM elements filterable",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saitho/dom-filters.git"
+  },
+  "author": "Mario Lubenka <me@saitho.me>",
+  "license": "GPL-2.0-or-later",
+  "bugs": {
+    "url": "https://github.com/saitho/dom-filters/issues"
+  },
+  "homepage": "https://github.com/saitho/dom-filters#readme"
+}
