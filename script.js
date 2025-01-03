@@ -52,7 +52,10 @@ class FilterOption extends HTMLElement {
             // Checkbox or radio
             contentElement = document.createElement('div')
             const values = JSON.parse(this.getAttribute('values'))
-            for (const value of values) {
+            const isArray = Array.isArray(values)
+            for (const optionKey in values) {
+                const value = isArray ? values[optionKey] : optionKey
+                const label = values[optionKey]
                 let innerContent
                 if (targetField.tagName === 'TEMPLATE') {
                     // target field is template -> clone it and base content off it
@@ -65,11 +68,11 @@ class FilterOption extends HTMLElement {
                         e.setAttribute('value', value)
                     })
                     evaluateAttribute(innerContent, 'set-text-value', (k, v, e) => {
-                        e.innerText = value
+                        e.innerText = label
                     })
                 } else {
                     innerContent = document.createElement('label')
-                    innerContent.innerHTML = `<input type="${type}" name="${key}" value="${value}" data-filter-key="${key}" /><span>${value}</span>`
+                    innerContent.innerHTML = `<input type="${type}" name="${key}" value="${value}" data-filter-key="${key}" /><span>${label}</span>`
                 }
                 contentElement.appendChild(innerContent)
             }

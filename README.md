@@ -26,6 +26,13 @@
 ></domfilters-option>
 
 <domfilters-option
+        title="Type with Labels"
+        key="checkboxWithLabelsxample"
+        fieldtype="checkbox"
+        values='{"1": "Label 1", "2": "Label 2"}}'
+></domfilters-option>
+
+<domfilters-option
         title="Type Radio"
         key="radioExample"
         fieldtype="radio"
@@ -89,7 +96,7 @@ Inside radio and checkbox the are additional data attributes available:
             <!-- Define an inner template with "data-target-field" attribute inside to style checkbox/radio items -->
             <template data-target-field>
                 <label>
-                    <input data-set-attr-type data-set-attr-name data-set-attr-value class="hidden" />
+                    <input data-setup-input class="hidden" />
                     <span class="px-4 p-1 bg-white cursor-pointer" style="border: 1px solid black;" data-set-text-value></span>
                 </label>
             </template>
