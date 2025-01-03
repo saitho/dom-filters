@@ -1,37 +1,117 @@
+
+/**
+ * This callback is displayed as part of the Requester class.
+ * @callback evaluateAttribute-callback
+ * @param {string} attrName
+ * @param {string} attrValue
+ * @param {HTMLElement} e
+ * @return {void}
+ */
+
+/**
+ *
+ * @param {HTMLElement} context
+ * @param {string} attributeName
+ * @param {evaluateAttribute-callback} callback
+ */
+function evaluateAttribute(context, attributeName, callback) {
+    context.querySelectorAll('[data-' + attributeName + ']').forEach((e) => {
+        callback(attributeName, e.getAttribute('data-' +attributeName), e)
+        e.removeAttribute('data-' +attributeName)
+    })
+}
+
 class FilterOption extends HTMLElement {
     connectedCallback() {
         const type = this.getAttribute('fieldtype') || 'text'
         const key = this.getAttribute('key')
-        let content = `<input type="text" name="${key}" data-filter-key="${key}">`
+
+        const optionTemplate = document.querySelector('template#domfilters-template-' + type)
+
+        let contentNode, targetField;
+        if (optionTemplate) {
+            contentNode = optionTemplate.content.cloneNode(true)
+            targetField = contentNode.querySelector('[data-target-field]')
+            if (!targetField) {
+                throw new Error('Missing target field. Please add a "data-target-field" attribute to your template.')
+            }
+        } else {
+            contentNode = document.createElement('div')
+            contentNode.className = 'flex flex-col lg:flex-row w-full mb-1'
+            const legend = document.createElement('legend')
+            legend.innerHTML = this.getAttribute('title')
+            contentNode.appendChild(legend)
+            targetField = contentNode
+        }
+        evaluateAttribute(contentNode, 'set-data-text', (k, v, e) => {
+            e.innerText = this.getAttribute(v)
+        })
+
+        let contentElement
         if (['checkbox', 'radio'].includes(type)) {
             // Checkbox or radio
-            content = '<div class="bg-white">';
+            contentElement = document.createElement('div')
             const values = JSON.parse(this.getAttribute('values'))
             for (const value of values) {
-                content += `<label>
-<input type="${type}" name="${key}" value="${value}" data-filter-key="${key}" class="hidden" />
-<span class="px-4 p-1 bg-white cursor-pointer" style="border: 1px solid black;">${value}</span>
-</label>`;
+                let innerContent
+                if (targetField.tagName === 'TEMPLATE') {
+                    // target field is template -> clone it and base content off it
+                    innerContent = targetField.content.cloneNode(true)
+                    targetField.setAttribute('data-target-field', 'replace')
+                    evaluateAttribute(innerContent, 'setup-input', (k, v, e) => {
+                        e.setAttribute('type', type)
+                        e.setAttribute('name', key)
+                        e.setAttribute('data-filter-key', key)
+                        e.setAttribute('value', value)
+                    })
+                    evaluateAttribute(innerContent, 'set-text-value', (k, v, e) => {
+                        e.innerText = value
+                    })
+                } else {
+                    innerContent = document.createElement('label')
+                    innerContent.innerHTML = `<input type="${type}" name="${key}" value="${value}" data-filter-key="${key}" class="hidden" />
+<span class="px-4 p-1 bg-white cursor-pointer" style="border: 1px solid black;">${value}</span>`
+                }
+                contentElement.appendChild(innerContent)
             }
-            content += `</div>`;
-        }
-        if (['select'].includes(type)) {
+        } else if (['select'].includes(type)) {
             // Select
-            content = `<select name="${key}" data-filter-key="${key}">`;
+            /** @var {HTMLSelectElement} selectNode */
+            contentElement = document.createElement('select')
+            contentElement.setAttribute('name', key)
+            contentElement.setAttribute('data-filter-key', key)
+
             if (this.hasAttribute('noneValue')) {
-                content += `<option value="">${this.getAttribute('noneValue')}</option>`
+                /** @var {HTMLOptionElement} option */
+                let option = document.createElement('option')
+                option.value = ''
+                option.innerText = this.getAttribute('noneValue')
+                contentElement.add(option)
             }
             const values = JSON.parse(this.getAttribute('values'))
             for (const value of values) {
-                content += `<option value="${value}">${value}</option>`;
+                /** @var {HTMLOptionElement} option */
+                let option = document.createElement('option')
+                option.value = value
+                option.innerText = value
+                contentElement.add(option)
             }
-            content += `</select>`;
+        } else {
+            contentElement = document.createElement('input')
+            contentElement.type = 'text'
+            contentElement.name = key
+            contentElement.setAttribute('data-filter-key', key)
         }
 
-        const fieldset = document.createElement('div')
-        fieldset.className = 'flex flex-col lg:flex-row w-full mb-1'
-        fieldset.innerHTML = `<legend>${this.getAttribute('title')}</legend>${content}`
-        this.appendChild(fieldset)
+        this.appendChild(contentNode)
+        if ((targetField.getAttribute('data-target-field') || 'append') === 'replace') {
+            if (targetField.classList.length) {
+                contentElement.classList.add(...targetField.classList)
+            }
+            targetField.parentElement.replaceChild(contentElement, targetField)
+        } else {
+            targetField.appendChild(contentElement)
+        }
     }
 }
 customElements.define('domfilters-option', FilterOption);
