@@ -62,7 +62,7 @@ class FilterOption extends HTMLElement {
                         .replaceAll('%key%', value)
                         .replaceAll('%key_upper%', value.toUpperCase())
                         .replaceAll('%key_lower%', value.toLowerCase())
-                        .replaceAll('%value%', userLabel)
+                        .replaceAll('%label%', userLabel)
                 }
 
                 let innerContent
@@ -98,7 +98,7 @@ class FilterOption extends HTMLElement {
                 option.value = ''
                 option.innerText = this.getAttribute('noneValue')
                 if (labelRendering.length) {
-                    option.innerText = labelRendering.replaceAll('%value%', option.innerText)
+                    option.innerText = labelRendering.replaceAll('%label%', option.innerText)
                 }
                 contentElement.add(option)
             }
@@ -109,7 +109,7 @@ class FilterOption extends HTMLElement {
                 option.value = value
                 option.innerText = value
                 if (labelRendering.length) {
-                    option.innerText = labelRendering.replaceAll('%value%', option.innerText)
+                    option.innerText = labelRendering.replaceAll('%label%', option.innerText)
                 }
                 contentElement.add(option)
             }

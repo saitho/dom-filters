@@ -19,6 +19,9 @@
 * **key** – key name (same as used in filter)
 * **fieldtype** – rendering of the field; one of text, checkbox, radio, select
 * **label-rendering** – can be used to manipulate the shown label for all types other than text
+  * Available placeholders:
+    * %label% – Text label
+    * %key%, %key_upper%, %key_lower% (only radio/checkbox) – Key value (_upper and _lower transforms it to upper/lower case)
 
 ## Example
 
