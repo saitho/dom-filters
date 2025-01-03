@@ -19,24 +19,24 @@
 </domfilters-option>
 
 <domfilters-option
-        title="Type" 
+        title="Type"
         key="checkboxExample"
-        fieldtype="checkbox" 
-        values="['Option A', 'Option B', 'Option C']"
+        fieldtype="checkbox"
+        values='["Option A", "Option B", "Option C"]'
 ></domfilters-option>
 
 <domfilters-option
-        title="Type Radio" 
+        title="Type Radio"
         key="radioExample"
-        fieldtype="radio" 
-        values="['Radio A', 'Radio B', 'Radio C']"
+        fieldtype="radio"
+        values='["Radio A", "Radio B", "Radio C"]'
 ></domfilters-option>
 
 <domfilters-option
-        title="Select" 
+        title="Select"
         key="selectExample"
-        fieldtype="select" 
-        values="['Select A', 'Select B', 'Select C']"
+        fieldtype="select"
+        values='["Select A", "Select B", "Select C"]'
 ></domfilters-option>
 ```
 
