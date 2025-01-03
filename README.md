@@ -8,6 +8,18 @@
   * radio
   * select
 
+
+## Elements
+
+### <domfilters-option>
+
+#### Attributes
+
+* **title** – display title
+* **key** – key name (same as used in filter)
+* **fieldtype** – rendering of the field; one of text, checkbox, radio, select
+* **label-rendering** – can be used to manipulate the shown label for all types other than text
+
 ## Example
 
 ```html
@@ -30,6 +42,14 @@
         key="checkboxWithLabelsxample"
         fieldtype="checkbox"
         values='{"1": "Label 1", "2": "Label 2"}}'
+></domfilters-option>
+
+<domfilters-option
+        title="Type with Labels"
+        key="checkboxWithLabelsxample"
+        fieldtype="checkbox"
+        values='{"1": "Label 1", "2": "Label 2"}}'
+        label-rendering="%key% - %key_upper% - %key_lower% - %label%"
 ></domfilters-option>
 
 <domfilters-option

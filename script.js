@@ -25,6 +25,7 @@ class FilterOption extends HTMLElement {
     connectedCallback() {
         const type = this.getAttribute('fieldtype') || 'text'
         const key = this.getAttribute('key')
+        const labelRendering = this.getAttribute('label-rendering') || ''
 
         const optionTemplate = document.querySelector('template#domfilters-template-' + type)
 
@@ -55,7 +56,15 @@ class FilterOption extends HTMLElement {
             const isArray = Array.isArray(values)
             for (const optionKey in values) {
                 const value = isArray ? values[optionKey] : optionKey
-                const label = values[optionKey]
+                let userLabel = values[optionKey]
+                if (labelRendering.length) {
+                    userLabel = labelRendering
+                        .replaceAll('%key%', value)
+                        .replaceAll('%key_upper%', value.toUpperCase())
+                        .replaceAll('%key_lower%', value.toLowerCase())
+                        .replaceAll('%value%', userLabel)
+                }
+
                 let innerContent
                 if (targetField.tagName === 'TEMPLATE') {
                     // target field is template -> clone it and base content off it
@@ -68,11 +77,11 @@ class FilterOption extends HTMLElement {
                         e.setAttribute('value', value)
                     })
                     evaluateAttribute(innerContent, 'set-text-value', (k, v, e) => {
-                        e.innerText = label
+                        e.innerText = userLabel
                     })
                 } else {
                     innerContent = document.createElement('label')
-                    innerContent.innerHTML = `<input type="${type}" name="${key}" value="${value}" data-filter-key="${key}" /><span>${label}</span>`
+                    innerContent.innerHTML = `<input type="${type}" name="${key}" value="${value}" data-filter-key="${key}" /><span>${userLabel}</span>`
                 }
                 contentElement.appendChild(innerContent)
             }
@@ -88,6 +97,9 @@ class FilterOption extends HTMLElement {
                 let option = document.createElement('option')
                 option.value = ''
                 option.innerText = this.getAttribute('noneValue')
+                if (labelRendering.length) {
+                    option.innerText = labelRendering.replaceAll('%value%', option.innerText)
+                }
                 contentElement.add(option)
             }
             const values = JSON.parse(this.getAttribute('values'))
@@ -96,6 +108,9 @@ class FilterOption extends HTMLElement {
                 let option = document.createElement('option')
                 option.value = value
                 option.innerText = value
+                if (labelRendering.length) {
+                    option.innerText = labelRendering.replaceAll('%value%', option.innerText)
+                }
                 contentElement.add(option)
             }
         } else {
