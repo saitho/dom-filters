@@ -77,7 +77,7 @@ class FilterOption extends HTMLElement {
                         e.setAttribute('value', value)
                     })
                     evaluateAttribute(innerContent, 'set-text-value', (k, v, e) => {
-                        e.innerText = userLabel
+                        e.innerHTML = userLabel
                     })
                 } else {
                     innerContent = document.createElement('label')
