@@ -21,6 +21,12 @@ function evaluateAttribute(context, attributeName, callback) {
     })
 }
 
+function trimHtml(text) {
+    const el = document.createElement('div')
+    el.innerHTML = text
+    return el.innerText
+}
+
 class FilterOption extends HTMLElement {
     connectedCallback() {
         const type = this.getAttribute('fieldtype') || 'text'
@@ -46,6 +52,12 @@ class FilterOption extends HTMLElement {
         }
         evaluateAttribute(contentNode, 'set-data-text', (k, v, e) => {
             e.innerText = this.getAttribute(v)
+        })
+        evaluateAttribute(contentNode, 'data-set-data-title', (k, v, e) => {
+            e.title = this.getAttribute(v)
+        })
+        evaluateAttribute(contentNode, 'data-set-data-aria-label', (k, v, e) => {
+            e.ariaLabel = this.getAttribute(v)
         })
 
         let contentElement
@@ -81,6 +93,7 @@ class FilterOption extends HTMLElement {
                     })
                 } else {
                     innerContent = document.createElement('label')
+                    innerContent.title = trimHtml(userLabel)
                     innerContent.innerHTML = `<input type="${type}" name="${key}" value="${value}" data-filter-key="${key}" /><span>${userLabel}</span>`
                 }
                 contentElement.appendChild(innerContent)

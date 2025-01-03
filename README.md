@@ -84,10 +84,12 @@ You can customize the HTML rendering by using `<template>` tags with an ID.
 Inside those templates you are free to define any structure you need.
 If you need to access data, you can do so by adding the following data attributes to a HTML element:
 
-| Data Attribute     | Description                                                                                                                              | Example                                                                                                                                                                                              |
-|--------------------|------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| data-set-data-text | Grab attribute from filter element and set it as innerText                                                                               | `<span data-set-data-text="title"></span>` -> `<span>Name</span>`                                                                                                                                    |
-| data-target-field  | The inner content (select, checkboxes etc) will be appended inside this element. Set value to "replace" in order to replace it instead.  | `<span data-target-field></span>` -> `<span><input type="text" name="textExample" /></span>`<br/>`<span data-target-field="replace"></span>` -> `<input type="text" name="textExample" />`           |
+| Data Attribute           | Description                                                                                                                             | Example                                                                                                                                                                                              |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| data-set-data-text       | Grab attribute from filter element and set it as innerText                                                                              | `<span data-set-data-text="title"></span>` -> `<span>Name</span>`                                                                                                                                    |
+| data-set-data-title      | Grab attribute from filter element and set it as title attribute                                                                        | `<span data-set-data-text="title"></span>` -> `<span>Name</span>`                                                                                                                                    |
+| data-set-data-aria-label | Grab attribute from filter element and set it as aria-label attribute                                                                   | `<span data-set-data-text="title"></span>` -> `<span>Name</span>`                                                                                                                                    |
+| data-target-field        | The inner content (select, checkboxes etc) will be appended inside this element. Set value to "replace" in order to replace it instead. | `<span data-target-field></span>` -> `<span><input type="text" name="textExample" /></span>`<br/>`<span data-target-field="replace"></span>` -> `<input type="text" name="textExample" />`           |
 
 ### Radio & Checkbox
 
@@ -114,7 +116,7 @@ Inside radio and checkbox the are additional data attributes available:
 </template>
 <template id="domfilters-template-checkbox">
     <div class="flex flex-col lg:flex-row w-full mb-1">
-        <legend data-set-data-text="title"></legend>
+        <legend data-set-data-text="title" data-set-data-title="title"></legend>
         <div class="bg-white">
             <!-- Define an inner template with "data-target-field" attribute inside to style checkbox/radio items -->
             <template data-target-field>
