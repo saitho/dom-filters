@@ -69,8 +69,7 @@ class FilterOption extends HTMLElement {
                     })
                 } else {
                     innerContent = document.createElement('label')
-                    innerContent.innerHTML = `<input type="${type}" name="${key}" value="${value}" data-filter-key="${key}" class="hidden" />
-<span class="px-4 p-1 bg-white cursor-pointer" style="border: 1px solid black;">${value}</span>`
+                    innerContent.innerHTML = `<input type="${type}" name="${key}" value="${value}" data-filter-key="${key}" /><span>${value}</span>`
                 }
                 contentElement.appendChild(innerContent)
             }
