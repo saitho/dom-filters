@@ -22,6 +22,7 @@
   * Available placeholders:
     * %label% – Text label
     * %key%, %key_upper%, %key_lower% (only radio/checkbox) – Key value (_upper and _lower transforms it to upper/lower case)
+* **minimum-options** – filter will be hidden if number of options is less than the defined value (for all fieldtypes but text)
 
 ## Example
 

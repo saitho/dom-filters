@@ -15,6 +15,7 @@
  * @param {evaluateAttribute-callback} callback
  */
 function evaluateAttribute(context, attributeName, callback) {
+
     context.querySelectorAll('[data-' + attributeName + ']').forEach((e) => {
         callback(attributeName, e.getAttribute('data-' +attributeName), e)
         e.removeAttribute('data-' +attributeName)
@@ -32,6 +33,7 @@ class FilterOption extends HTMLElement {
         const type = this.getAttribute('fieldtype') || 'text'
         const key = this.getAttribute('key')
         const labelRendering = this.getAttribute('label-rendering') || ''
+        const minimumOptions = this.getAttribute('minimum-options') || 1
 
         const optionTemplate = document.querySelector('template#domfilters-template-' + type)
 
@@ -50,15 +52,7 @@ class FilterOption extends HTMLElement {
             contentNode.appendChild(legend)
             targetField = contentNode
         }
-        evaluateAttribute(contentNode, 'set-data-text', (k, v, e) => {
-            e.innerText = this.getAttribute(v)
-        })
-        evaluateAttribute(contentNode, 'set-data-title', (k, v, e) => {
-            e.title = this.getAttribute(v)
-        })
-        evaluateAttribute(contentNode, 'set-data-aria-label', (k, v, e) => {
-            e.ariaLabel = this.getAttribute(v)
-        })
+        this.evaluateAttributesWrapper(contentNode)
 
         let contentElement
         if (['checkbox', 'radio'].includes(type)) {
@@ -66,6 +60,15 @@ class FilterOption extends HTMLElement {
             contentElement = document.createElement('div')
             const values = JSON.parse(this.getAttribute('values'))
             const isArray = Array.isArray(values)
+            if (isArray) {
+                if (values.length < minimumOptions) {
+                    return;
+                }
+            } else {
+                if (Object.keys(values).length < minimumOptions) {
+                    return;
+                }
+            }
             for (const optionKey in values) {
                 const value = isArray ? values[optionKey] : optionKey
                 let userLabel = values[optionKey]
@@ -96,6 +99,7 @@ class FilterOption extends HTMLElement {
                     innerContent.title = trimHtml(userLabel)
                     innerContent.innerHTML = `<input type="${type}" name="${key}" value="${value}" data-filter-key="${key}" /><span>${userLabel}</span>`
                 }
+                this.evaluateAttributesWrapper(innerContent, {'set-data-title': trimHtml(userLabel), 'set-data-aria-label': trimHtml(userLabel)})
                 contentElement.appendChild(innerContent)
             }
         } else if (['select'].includes(type)) {
@@ -116,6 +120,9 @@ class FilterOption extends HTMLElement {
                 contentElement.add(option)
             }
             const values = JSON.parse(this.getAttribute('values'))
+            if (values.length < minimumOptions) {
+                return
+            }
             for (const value of values) {
                 /** @var {HTMLOptionElement} option */
                 let option = document.createElement('option')
@@ -142,6 +149,22 @@ class FilterOption extends HTMLElement {
         } else {
             targetField.appendChild(contentElement)
         }
+    }
+
+    /**
+     @param {HTMLElement} context
+     @param {object} overrideAttributes
+    */
+    evaluateAttributesWrapper(context, overrideAttributes = {}) {
+        evaluateAttribute(context, 'set-data-text', (k, v, e) => {
+            e.innerText = overrideAttributes['set-data-text'] || this.getAttribute(v)
+        })
+        evaluateAttribute(context, 'set-data-title', (k, v, e) => {
+            e.title = overrideAttributes['set-data-title'] || this.getAttribute(v)
+        })
+        evaluateAttribute(context, 'set-data-aria-label', (k, v, e) => {
+            e.ariaLabel = overrideAttributes['set-data-aria-label'] || this.getAttribute(v)
+        })
     }
 }
 customElements.define('domfilters-option', FilterOption);
